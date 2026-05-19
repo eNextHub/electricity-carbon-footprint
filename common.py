@@ -15,17 +15,31 @@ ROOT = Path(__file__).resolve().parent
 
 # --------------------------------------------------------------------- paths
 def load_config():
-    """Return (cfg dict, shared base Path) from paths.yml."""
+    """Return (cfg dict, shared base Path) from paths.yml.
+
+    The preferred configuration stores full path templates directly under
+    ``databases``. Older configs with ``user`` + ``shared`` are still
+    supported for backwards compatibility, in which case ``base`` is the
+    selected shared root.
+    """
     with open(ROOT / 'paths.yml') as fh:
         cfg = yaml.safe_load(fh)
-    base = Path(cfg['shared'][cfg['user']])
+    base = None
+    if 'shared' in cfg and 'user' in cfg:
+        base = Path(cfg['shared'][cfg['user']])
     return cfg, base
 
 
 def db_path(cfg, base, key, **fmt):
-    """Resolve a database path relative to the shared base, formatting
-    placeholders such as {version}, {year}, {system}, {table}, {archive}."""
-    return base / cfg['databases'][key].format(**fmt)
+    """Resolve a database path from paths.yml.
+
+    Full path templates under ``databases`` are used as-is. Legacy relative
+    templates are resolved against ``base``.
+    """
+    template = Path(cfg['databases'][key].format(**fmt))
+    if template.is_absolute() or base is None:
+        return template
+    return base / template
 
 
 # ------------------------------------------------------------ emission factors

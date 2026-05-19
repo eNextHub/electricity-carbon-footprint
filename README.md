@@ -26,7 +26,7 @@ into a harmonised `combined_results.csv` with values normalised to `kg/EUR`.
 ## Repository layout
 
 ```
-paths.yml                 local/shared dataset roots and path templates
+paths.yml                 full local path templates for each database
 database_properties.py    database versions, years, systems, GWP factors, labels
 common.py                 path resolution, GHG reshaping, CSV export helpers
 run.ipynb                 main execution notebook, one section per database
@@ -38,12 +38,14 @@ export/                   exported per-database result files
 
 - Python environment with the dependencies used by the notebook and helper scripts
 - A local MARIO installation with `Database.calc_ghg` available
-- Access to the shared input-output database archive referenced in `paths.yml`
+- Access to local copies of the input-output databases referenced in `paths.yml`
 
 ## How to use it
 
 1. Configure your data paths in `paths.yml`.
-	Set `user:` to your initials and add or update the matching entry under `shared:` so it points to your local copy of the IO database collection.
+	Each database entry is a full local path template. Update those paths so they point to your own copies of EXIOBASE, EORA26, EMERGING, and GLORIA.
+
+	This is intentionally explicit: the repository no longer relies on a separate `shared` root plus user initials to reconstruct the full paths.
 
 2. Prepare the Python environment.
 	Activate the environment you use for MARIO and make sure the MARIO version you are running exposes `Database.calc_ghg`.
@@ -64,8 +66,10 @@ export/                   exported per-database result files
 
 ## Adapting the repository
 
-- To add a new collaborator, add a new key under `shared:` in `paths.yml` and switch `user:` to that key.
+- To run the project on another machine, replace the absolute path templates in `paths.yml` with paths valid on that machine.
 - To change years, versions, systems, or electricity labels, edit
 	`database_properties.py`.
 - To change export behaviour or output naming, update the helpers in
 	`common.py`.
+
+Legacy note: `common.py` still accepts the older `shared` + `user` configuration format for backwards compatibility, but the repository now uses explicit per-database paths by default.

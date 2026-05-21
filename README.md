@@ -30,13 +30,22 @@ additional non-IO sources into a single physical comparison table.
 ## Repository layout
 
 ```
-paths.yml                 full local path templates for each database
-database_properties.py    database versions, years, systems, GWP factors, labels
-common.py                 path resolution, GHG reshaping, CSV export helpers
-run.ipynb                 main execution notebook, one section per database
-export/                   exported per-database result files
-emission factors/         physical comparison table and figure outputs
-plots.py                  plotting helpers for Figure 2
+common.py                         path resolution, GHG reshaping, CSV export helpers
+database_properties.py            database versions, years, systems, GWP factors, labels
+paths.yml                         full local path templates for each database
+plots.py                          plotting helpers for Figure 2
+README.md                         project overview and usage notes
+run.ipynb                         main execution notebook, one section per database
+emission factors/                 physical comparison inputs and merged outputs
+	input-output tables/            exported IO-based emissions tables used in the physical conversion step
+	other sources.xlsx              non-IO comparison sources appended in the notebook
+	physical_efs.csv                merged physical comparison table in g/kWh
+plots/                            generated figure outputs
+	figures/                        exported SVG/JPG/TIFF versions of Figure 2
+support/                          auxiliary spreadsheets used by parsing and plotting
+	EXIOBASE_ixi_aggregation.xlsx   EXIOBASE ixi aggregation mapping
+	EXIOBASE_pxp_aggregation.xlsx   EXIOBASE pxp aggregation mapping
+	Electricity_Prices.xlsx         country-year electricity prices used for unit conversion
 ```
 
 ## Requirements
@@ -70,13 +79,13 @@ plots.py                  plotting helpers for Figure 2
 	The plotting cell loads `physical_efs.csv`, maps each source to the plotting labels used in the manuscript, and creates the 4-panel comparison figure.
 
 7. Export high-resolution figures.
-	The final notebook cell saves the current figure to `export/figures/` in `svg`, `jpg`, and `tiff` formats.
+	The final notebook cell saves the current figure to `plots/figures/` in `svg`, `jpg`, and `tiff` formats.
 
 ## Outputs
 
 - Per-database CSV files named from database, table, version, system, and year
 - `emission factors/physical_efs.csv`, a merged table harmonised to `g/kWh`
-- High-resolution figure exports in `export/figures/`
+- High-resolution figure exports in `plots/figures/`
 
 ## Adapting the repository
 
